@@ -38,7 +38,7 @@ def get_quarter_date_range(quarter:int) -> tuple[str,str]:
 def get_date_list(start:str="",end:str="",quarter:int=-1,use_range:bool=False) -> list[str]:
     start_date:str = start
     end_date:str = end
-    if use_range:
+    if not use_range:
         start_date,end_date = get_quarter_date_range(quarter)
     init:datetime = datetime.strptime(start_date,"%Y-%m-%d")
     final:datetime = datetime.strptime(end_date,"%Y-%m-%d")
@@ -68,9 +68,9 @@ def parse_args() -> tuple[str,str,int,bool]:
     start:str = ""
     end:str = ""
     if check_quarter and args.quarter in [1,2,3,4]:
-        raise RuntimeError("Quarter must be of 1, 2, 3, or 4")
-    else:
         quarter = args.quarter
+    else:
+        quarter = args.quarter if args.quarter is not None else -1
     
     if not check_quarter:
         if len(args.start) != 10:
@@ -82,6 +82,7 @@ def parse_args() -> tuple[str,str,int,bool]:
         else:
             end = args.end
 
+    print(start,end,quarter,args.use_init)
     
     return start, end, quarter, args.use_init
 
