@@ -35,12 +35,11 @@ def get_quarter_date_range(quarter:int) -> tuple[str,str]:
         end = year + "12-31"
     return start, end
 
-    
-
-def get_date_list(quarter:int) -> list[str]:
-    start_date:str = ""
-    end_date:str = ""
-    start_date,end_date = get_quarter_date_range(quarter)
+def get_date_list(start:str="",end:str="",quarter:int=-1,use_range:bool=False) -> list[str]:
+    start_date:str = start
+    end_date:str = end
+    if use_range:
+        start_date,end_date = get_quarter_date_range(quarter)
     init:datetime = datetime.strptime(start_date,"%Y-%m-%d")
     final:datetime = datetime.strptime(end_date,"%Y-%m-%d")
 
@@ -52,23 +51,49 @@ def get_date_list(quarter:int) -> list[str]:
     dateList.reverse()
     return dateList
 
-def parse_args() -> tuple[str,str,bool]:
+def parse_args() -> tuple[str,str,int,bool]:
     parser = argparse.ArgumentParser(description="The setup-ci-audit script generates a list of repositories that will be audited for this quarter")
     parser.add_argument("-q","--quarter",dest="quarter",type=int,metavar="quarter(1,2,3,4)", help="The quarter to start the audit for")
+    parser.add_argument("-s","--start",dest="start",type=str,metavar="START (YYYY-MM-DD)", help="Specify a start date for audit prep within a date range")
+    parser.add_argument("-e","--end",dest="end",type=str,metavar="END (YYYY-MM-DD)", help="Specify an end date for audit prep within a date range")
     parser.add_argument("-i","--use-initial-ci-review-date",dest="use_init",action="store_true",help="Specify whether or not to use initial-ci-review-date custom property")
 
     args = parser.parse_args()
-
-    if args.quarter < 1 or args.quarter > 4:
-        raise RuntimeError("Quarter must be of 1, 2, 3, or 4")
     
-    return args.quarter,args.use_init
+    check_quarter:bool = True
+    if args.start is not None and args.end is not None:
+        check_quarter = False
+
+    quarter:int = -1
+    start:str = ""
+    end:str = ""
+    if check_quarter and args.quarter in [1,2,3,4]:
+        raise RuntimeError("Quarter must be of 1, 2, 3, or 4")
+    else:
+        quarter = args.quarter
+    
+    if not check_quarter:
+        if len(args.start) != 10:
+            raise RuntimeError("Start date must be formatted as YYYY-MM-DD")
+        else:
+            start = args.start
+        if len(args.end) != 10:
+            raise RuntimeError("End date must be formatted as YYYY-MM-DD")
+        else:
+            end = args.end
+
+    
+    return start, end, quarter, args.use_init
 
 def main():
     try:
-        args:tuple[int,bool] = parse_args()
-        dateList:list[str] = get_date_list(quarter=args[0])
-        run_gh_query(date_list=dateList, use_init_date=args[1])
+        start:str = ""
+        end:str = ""
+        quarter:int = -1
+        start, end, quarter, use_init = parse_args()
+        use_date_range:bool = quarter not in [1,2,3,4]
+        dateList:list[str] = get_date_list(start=start,end=end,quarter=quarter,use_range=use_date_range)
+        run_gh_query(date_list=dateList, use_init_date=use_init)
     except Exception as e:
         print(e)
         sys.exit(1) # error code
