@@ -28,12 +28,14 @@ def gen_issue_script(audit_list_file:str, quarter:str):
         audit_script:str = "audit_issue_gen.sh"
         with open(audit_script, "w") as script:
             for line in cmd_list:
-                line += "\nsleep 2\n" # need sleep 2 for gh api to be happy
+                line += "\n"
+                print(line)
                 script.write(line)
+                script.write("sleep 2\n") # need sleep 2 for gh api to be happy
 
         print("Generation complete. chmod to 755 to enable execution of the script")
+        chmod(audit_script,0o755)
     
-        chmod(path=audit_script,mode=755) # Change mode on the file to ensure executability
     except Exception as e:
         raise e
 

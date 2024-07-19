@@ -1,2 +1,3 @@
 **/*.txt
 **/audit_setup.sh
+**/audit_issue_gen.sh
