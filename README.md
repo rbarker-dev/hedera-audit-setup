@@ -7,7 +7,8 @@ for configuring an audit within the hashgraph org on github.
 
 1. [run_audit_prep.sh](run_audit_prep.sh) - The worker script that generates the audit files
 2. [setup-ci-audit.py](setup-ci-audit.py) - Python script that generates a series of gh queries
-3. [audit-template.md](audit-template.md) - Default body for audit stories
+3. [audit_template.md](audit_template.md) - Default body for audit stories
+4. [audit_issue_script_generator.py](audit_issue_script_generator.py) - Generate the gh CLI script to create issues based on output from run_audit_prep.sh
 
 ## Running Audit Setup
 

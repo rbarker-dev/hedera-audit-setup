@@ -3,13 +3,13 @@ import sys
 from datetime import datetime,timedelta
 
 def run_gh_query(date_list:list[str], use_init_date:bool=False):
-    command_template:str = "gh search repos props.last-ci-review-date:[TEMPLATE_DATE] --owner=hashgraph --limit 200 --json name --jq '.[].name' | cat\n"
+    command_template:str = "gh search repos props.last-ci-review-date:[TEMPLATE_DATE] --owner=hashgraph --limit 200 --json name --jq '.[].name' | cat"
     if use_init_date == True:
-        command_template = "gh search repos props.initial-ci-review-date:[TEMPLATE_DATE] --owner=hashgraph --limit 200 --json name --jq '.[].name' | cat\n"
+        command_template = "gh search repos props.initial-ci-review-date:[TEMPLATE_DATE] --owner=hashgraph --limit 200 --json name --jq '.[].name' | cat"
     with open("audit_setup.sh","w") as shell:
         for day in date_list:
-            command = command_template
-            shell.write(command.replace("[TEMPLATE_DATE]",day))
+            command = command_template.replace("[TEMPLATE_DATE]",day)
+            shell.write(command + "\n")
             shell.write("sleep 2\n")
 
 def get_quarter_date_range(quarter:int) -> tuple[str,str]:
