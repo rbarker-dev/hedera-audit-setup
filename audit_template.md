@@ -1,4 +1,4 @@
-## [AUDIT_YEAR_QUARTER] CI/CD Audit
+# CI/CD Quarterly Audit
 
 - Description: Perform quarterly CI/CD audit
 
