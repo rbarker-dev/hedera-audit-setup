@@ -2,11 +2,6 @@ import argparse
 import sys
 from datetime import datetime,timedelta
 
-"""
-gh search repos props.initial-ci-review-date:2024-05-01 --owner=hashgraph --visibility=public --limit 200 --json name --jq '.[].name' | cat
-
-"""
-
 def run_gh_query(date_list:list[str], use_init_date:bool=False):
     command_template:str = "gh search repos props.last-ci-review-date:[TEMPLATE_DATE] --owner=hashgraph --limit 200 --json name --jq '.[].name' | cat\n"
     if use_init_date == True:
@@ -81,8 +76,6 @@ def parse_args() -> tuple[str,str,int,bool]:
             raise RuntimeError("End date must be formatted as YYYY-MM-DD")
         else:
             end = args.end
-
-    print(start,end,quarter,args.use_init)
     
     return start, end, quarter, args.use_init
 
