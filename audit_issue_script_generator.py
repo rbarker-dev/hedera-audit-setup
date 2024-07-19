@@ -9,12 +9,9 @@ def gen_issue_script(audit_list_file:str, quarter:str):
 
     year:str = datetime.today().strftime("%Y-")
     title:str = "\"ci: [" + year + quarter + "] CI/CD Audit Story\""
-    labels:list[str] = ["github_actions","Audit"]
     project:str = "\"DevOps-CI Planning Board\""
     audit_template:str = "audit_template.md"
-    command:str = "gh issue create --repo hashgraph/[REPO] --project " + project + " --title " + title + " --body-file " + audit_template + " "
-    for label in labels:
-        command += "--label \"" + label + "\" "
+    command:str = "gh issue create --repo hashgraph/[REPO] --project " + project + " --title " + title + " --body-file " + audit_template + " --label Audit"
     
     cmd_list:list[str] = []
 
