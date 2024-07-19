@@ -3,7 +3,7 @@ import sys
 
 def gen_issue_script(audit_list_file:str, quarter:str):
     from datetime import datetime
-    year:str = datetime.today().strptime("%Y-")
+    year:str = datetime.today().strftime("%Y-")
     title:str = "ci: [" + year + quarter + "] CI/CD Audit Story"
     labels:list[str] = ["github_actions","Audit"]
     project:str = "DevOps-CI Planning Board"
