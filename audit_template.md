@@ -4,18 +4,19 @@
 
 ## Audit Criteria
 
-- [ ] All workflow items are using pinned actions
-- [ ] Appropriate permissions are set within the github workflows
-- [ ] Dependabot is enabled on the repository
-- [ ] The Repository is using self-hosted runners (if appropriate)
+- [ ] Actions are enabled?
+  - All workflow items are using pinned actions
+  - Appropriate permissions are set within the github workflows
+  - Dependabot is enabled on the repository
+  - The Repository is using self-hosted runners (if appropriate)
+  - The Step-Security Hardened Security action is enabled
+- [ ] Actions are disabled if not in use within last 6 months
 - [ ] The repository uses the current rulesets
 - [ ] Individual branch protections are turned off
 - [ ] Individual tag protections are turned off
-- [ ] The Step-Security Hardened Security action is enabled
 - [ ] CODEOWNERS is valid and up-to-date
 - [ ] Teams are assigned to the repository
 - [ ] Individual contributors that are part of assigned teams are removed from contributors list
-- [ ] Actions are disabled if not in use within last 6 months
 - [ ] [Repository settings](#repository-settings) are configured per organization standard
 - [ ] All webhooks present are needed and in use
 - [ ] *If Applicable*: Alert repository owners of software versions that are no longer supported
@@ -37,4 +38,4 @@
 
 ## Acceptance Criteria
 
-- [ ] All Audit Criteria have been met
+- [x] All Audit Criteria have been met
