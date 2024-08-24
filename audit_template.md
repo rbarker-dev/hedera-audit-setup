@@ -11,13 +11,13 @@
   - The Repository is using self-hosted runners (if appropriate)
   - The Step-Security Hardened Security action is enabled
 - [ ] Actions are disabled if not in use within last 6 months
-- [ ] The repository uses the current rulesets
+- [ ] [Repository settings](#repository-settings) are configured per organization standard
 - [ ] Individual branch protections are turned off
 - [ ] Individual tag protections are turned off
+- [ ] The repository uses the current rulesets
 - [ ] CODEOWNERS is valid and up-to-date
 - [ ] Teams are assigned to the repository
 - [ ] Individual contributors that are part of assigned teams are removed from contributors list
-- [ ] [Repository settings](#repository-settings) are configured per organization standard
 - [ ] All webhooks present are needed and in use
 - [ ] *If Applicable*: Alert repository owners of software versions that are no longer supported
 - [ ] *If Applicable*: Alert repository owners when software versions are within 3 months of losing support
