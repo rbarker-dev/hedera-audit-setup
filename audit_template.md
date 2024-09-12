@@ -95,6 +95,7 @@ Perform repository audit
 ### Workflow checks
 
 - [ ] Appropriate permissions are set within the github workflows
+- [ ] All steps are named
 - [ ] All workflow actions are using pinned commits
 - [ ] The Step-Security Hardened Security action is enabled on each workflow job
 - [ ] Ensure no hard-coded keys in workflows
