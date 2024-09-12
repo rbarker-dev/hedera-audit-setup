@@ -1,11 +1,33 @@
-# CI/CD Quarterly Audit
+# CI/CD Repository Audit
 
 **Description**:
-Perform quarterly CI/CD audit
+Perform repository audit
 
 ---
 
+## Contents
+
+- [CI/CD Repository Audit](#cicd-repository-audit)
+  - [Contents](#contents)
+  - [Administrative Audit Criteria](#administrative-audit-criteria)
+    - [Check Actions State](#check-actions-state)
+    - [Check if Actions should be disabled](#check-if-actions-should-be-disabled)
+    - [Repository Settings Checks](#repository-settings-checks)
+    - [App Integrations](#app-integrations)
+    - [Security Checks](#security-checks)
+    - [Custom Properties](#custom-properties)
+  - [Non-Administrative Audit Criteria](#non-administrative-audit-criteria)
+    - [Dependabot](#dependabot)
+    - [Workflow checks](#workflow-checks)
+    - [Self Hosted Runners](#self-hosted-runners)
+    - [CODEOWNERS](#codeowners)
+    - [Other](#other)
+  - [Repository Settings](#repository-settings)
+  - [Acceptance Criteria](#acceptance-criteria)
+
 ## Administrative Audit Criteria
+
+### Check Actions State
 
 - [ ] Actions are enabled
 - [ ] Actions are disabled
@@ -29,17 +51,35 @@ Perform quarterly CI/CD audit
 
 ### App Integrations
 
-- [ ] Snyk is enabled on the repository
-
 **If actions are enabled**:
 
 - [ ] Dependabot is enabled on the repository
 - [ ] Codecov is enabled on the repository
-- [ ] CODECOV_TOKEN is configured on the repository
-- [ ] Codacy is enabled on the repository
-- [ ] Codacy is configured on the repository
-- [ ] Ensure there are no hard-coded keys in the workflows
-  - [ ] Necessary keys are captured as github secrets
+
+### Security Checks
+
+- [ ] Snyk is enabled on the repository
+- [ ] Dependabot is configured to monitor all relevant ecosystems
+  - npm
+  - electron
+  - github actions
+  - etc.
+- [ ] Secrets Management
+  - [ ] No hardcoded secrets in the workflow files or code
+  - [ ] GitHub secrets are employed to store sensitive data
+  - [ ] Secrets are referenced in CI via config files or environment variables
+- [ ] Tokens are stored securely as GitHub Secrets
+- [ ] Executable Path Integrity
+  - [ ] Integrity checks for executables are implemented
+    - integrity checks should use either checksums or cryptographic hashes for verification
+  - [ ] Checksums/hashes are verified during CI process to detect unathorized changes
+  - [ ] Expected checksums/hashes are stored securely and referenced through the CI pipeline
+- [ ] Code Coverage Reporting - Configure codecov on the repository
+- [ ] CodeQL is enabled on the repository
+- [ ] `npx playwright install deps` is used to install OS dependencies instead of `aptitude`
+- [ ] Code Formatting
+  - [ ] ESLint rules are applied to the codebase
+  - [ ] Prettier Formatting rules are applied to the codebase
 
 ### Custom Properties
 
