@@ -7,6 +7,8 @@ Perform repository audit
 
 ## Contents
 
+::TODO::
+Update the links below
 - [CI/CD Repository Audit](#cicd-repository-audit)
   - [Contents](#contents)
   - [Administrative Audit Criteria](#administrative-audit-criteria)
@@ -27,23 +29,46 @@ Perform repository audit
 
 ## Administrative Audit Criteria
 
-### Check Actions State
-
-- [ ] Actions are enabled
-- [ ] Actions are disabled
-
-### Check if Actions should be disabled
+### Actions State
+Actions are:
+- [ ] Enabled
+- [ ] Disabled
 
 **If actions have not been run in the previous 6 months they should be disabled**:
-
-- [ ] Actions have run in the last 6 months and shall remain enabled
 - [ ] Actions have been disabled on the inactive repository
 
-### Repository Settings Checks
+**Check if actions have run in the last 6 months**:
+- [ ] Actions have run in the last 6 months and shall remain enabled
 
-- [ ] [Repository settings](#repository-settings) are configured per organization standard
+# Settings
+- [ ] Repository settings are configured per organization standard (listed below)
+
+## General Tab
+- [ ] Require contributors to sign off on web-based commits
+
+### Features Section:
+- [ ] Disable Wiki
+  - If it is in use, leave Wiki enabled. If not in use, remove functionality (uncheck Wiki option).
+- [ ] Enable Issues
+- [ ] Enable Preserve this Repository
+- [ ] Enable Discussions
+- [ ] Enable Projects
+  
+### Pull Requests Section:
+- [ ] Enable Allow Squash Merging
+- [ ] Enable Always suggest updating pull request branches
+- [ ] Enable Automatically delete head branches
+ 
+### Pushes Section:
+- [ ] Pushes: Limit how many branches and tags can be updated in a single push
+
+## Branches Tab
 - [ ] Individual branch protections are turned off
+
+## Tags Tab
 - [ ] Individual tag protections are turned off
+
+## Rules/Rulesets Tab
 - [ ] The repository uses the current rulesets
 - [ ] Teams are assigned to the repository
 - [ ] Individual contributors that are part of assigned teams are removed from contributors list
@@ -81,10 +106,6 @@ Perform repository audit
   - [ ] ESLint rules are applied to the codebase
   - [ ] Prettier Formatting rules are applied to the codebase
 
-### Custom Properties
-
-- [ ] Custom properties: `last-ci-review-by-team` is set
-- [ ] Custom properties: `last-ci-review-date` is set (Use format: `YYYY-MM-DD`)
 
 ## Non-Administrative Audit Criteria
 
@@ -116,21 +137,11 @@ Perform repository audit
 
 ---
 
-## Repository Settings
-
-- [x] Require contributors to sign off on web-based commits
-- [x] Features: Wiki - Check if the wiki page is in use. If it is in use, leave checked. If not in use, remove functionality.
-- [x] Features: Issues
-- [x] Features: Preserve this Repository
-- [x] Features: Discussions
-- [x] Features: Projects
-- [x] Pull Requests: Allow Squash Merging
-- [x] Pull Requests: Always suggest updating pull request branches
-- [x] Pull Requests: Automatically delete head branches
-- [x] Pushes: Limit how many branches and tags can be updated in a single push
-
----
-
 ## Acceptance Criteria
 
 - [ ] All Audit Criteria have been met
+
+## Custom Properties - Marking Complete
+
+- [ ] Custom properties: `last-ci-review-by-team` is set
+- [ ] Custom properties: `last-ci-review-date` is set (Use format: `YYYY-MM-DD`)
