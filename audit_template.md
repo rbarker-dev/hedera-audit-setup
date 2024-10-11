@@ -119,6 +119,7 @@ Perform repository audit
 ## Repository Settings
 
 - [x] Require contributors to sign off on web-based commits
+- [x] Features: Wiki - Check if the wiki page is in use. If it is in use, leave checked. If not in use, remove functionality.
 - [x] Features: Issues
 - [x] Features: Preserve this Repository
 - [x] Features: Discussions
