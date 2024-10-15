@@ -3,7 +3,7 @@
 **Description**:
 Perform repository audit
 
-## Administrative Audit Criteria
+# Administrative Audit Criteria
 
 ### Actions State
 If actions have not been run in the previous 6 months they should be disabled:
@@ -12,13 +12,11 @@ If actions have not been run in the previous 6 months they should be disabled:
 If actions have run in the last 6 months then actions shall remain enabled:
 - [ ] Actions are enabled
 
-## Settings
-- [ ] Repository settings are configured per organization standard (listed below)
-
-## General Tab
+## Settings Window
+### General Tab
 - [ ] Require contributors to sign off on web-based commits
 
-### Features Section:
+#### Features Section:
 - [ ] Disable Wiki
   - If it is in use, leave Wiki enabled. If not in use, remove functionality (uncheck Wiki option). Should be disabled whenever possible.
 - [ ] Enable Issues
@@ -26,59 +24,63 @@ If actions have run in the last 6 months then actions shall remain enabled:
 - [ ] Enable Discussions
 - [ ] Enable Projects
   
-### Pull Requests Section:
+#### Pull Requests Section:
 - [ ] Enable Allow Squash Merging
 - [ ] Enable Always suggest updating pull request branches
 - [ ] Enable Automatically delete head branches
  
-### Pushes Section:
+#### Pushes Section:
 - [ ] Pushes: Limit how many branches and tags can be updated in a single push (Default # is 5)
 
-## Branches Tab
-- [ ] Individual branch protections are turned off
-
-## Tags Tab
-- [ ] Individual tag protections are turned off
-
-## Rules/Rulesets Tab
-- [ ] The repository uses the current rulesets
+### Collaborators and Teams Tab
 - [ ] Teams are assigned to the repository
 - [ ] Individual contributors that are part of assigned teams are removed from contributors list
-- [ ] All webhooks present are needed and in use
 
-### App Integrations
+### Branches Tab
+- [ ] Individual branch protections are turned off
 
+### Tags Tab
+- [ ] Individual tag protections are turned off
+
+### Rules/Rulesets Tab
+- [ ] The repository uses the current rulesets
+
+### Actions Tab
 **If actions are enabled**:
 - [ ] Dependabot is enabled on the repository
 - [ ] Codecov is enabled on the repository
 
-### Security Checks
+### Webhooks Tab
+- [ ] All webhooks present are needed and in use
+- [ ] Snyk is enabled on the repo (check to see if the webhook exists and is in use)
 
-- [ ] Snyk is enabled on the repository
+### Secrets and Variables Tab
+- [ ] GitHub secrets are employed to store sensitive data
+- [ ] Tokens are stored securely as GitHub Secrets
+
+## App Integrations
 - [ ] Dependabot is configured to monitor all relevant ecosystems
   - npm
   - electron
   - github actions
   - etc.
+- [ ] Code Coverage Reporting - Configure codecov on the repository
+- [ ] CodeQL is enabled on the repository
+
+### Security Checks in Repo
 - [ ] Secrets Management
   - [ ] No hardcoded secrets in the workflow files or code
-  - [ ] GitHub secrets are employed to store sensitive data
   - [ ] Secrets are referenced in CI via config files or environment variables
-- [ ] Tokens are stored securely as GitHub Secrets
 - [ ] Executable Path Integrity
   - [ ] Integrity checks for executables are implemented
     - integrity checks should use either checksums or cryptographic hashes for verification
-  - [ ] Checksums/hashes are verified during CI process to detect unathorized changes
+  - [ ] Checksums/hashes are verified during CI process to detect unauthorized changes
   - [ ] Expected checksums/hashes are stored securely and referenced through the CI pipeline
-- [ ] Code Coverage Reporting - Configure codecov on the repository
-- [ ] CodeQL is enabled on the repository
 - [ ] `npx playwright install deps` is used to install OS dependencies instead of `aptitude`
-
 
 ### Code Formatting
   - [ ] NodeJS Projects use ESLint/Prettier formatting
   - [ ] Java Projects use Checkstyle/Spotless formatting
-
 
 ## Non-Administrative Audit Criteria
 
