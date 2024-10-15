@@ -3,47 +3,44 @@
 **Description**:
 Perform repository audit
 
----
-
-## Contents
-
-- [CI/CD Repository Audit](#cicd-repository-audit)
-  - [Contents](#contents)
-  - [Administrative Audit Criteria](#administrative-audit-criteria)
-    - [Check Actions State](#check-actions-state)
-    - [Check if Actions should be disabled](#check-if-actions-should-be-disabled)
-    - [Repository Settings Checks](#repository-settings-checks)
-    - [App Integrations](#app-integrations)
-    - [Security Checks](#security-checks)
-    - [Custom Properties](#custom-properties)
-  - [Non-Administrative Audit Criteria](#non-administrative-audit-criteria)
-    - [Dependabot](#dependabot)
-    - [Workflow checks](#workflow-checks)
-    - [Self Hosted Runners](#self-hosted-runners)
-    - [CODEOWNERS](#codeowners)
-    - [Other](#other)
-  - [Repository Settings](#repository-settings)
-  - [Acceptance Criteria](#acceptance-criteria)
-
 ## Administrative Audit Criteria
 
-### Check Actions State
+### Actions State
+If actions have not been run in the previous 6 months they should be disabled:
+- [ ] Actions are/have been disabled
 
+If actions have run in the last 6 months then actions shall remain enabled:
 - [ ] Actions are enabled
-- [ ] Actions are disabled
 
-### Check if Actions should be disabled
+## Settings
+- [ ] Repository settings are configured per organization standard (listed below)
 
-**If actions have not been run in the previous 6 months they should be disabled**:
+## General Tab
+- [ ] Require contributors to sign off on web-based commits
 
-- [ ] Actions have run in the last 6 months and shall remain enabled
-- [ ] Actions have been disabled on the inactive repository
+### Features Section:
+- [ ] Disable Wiki
+  - If it is in use, leave Wiki enabled. If not in use, remove functionality (uncheck Wiki option). Should be disabled whenever possible.
+- [ ] Enable Issues
+- [ ] Enable Preserve this Repository
+- [ ] Enable Discussions
+- [ ] Enable Projects
+  
+### Pull Requests Section:
+- [ ] Enable Allow Squash Merging
+- [ ] Enable Always suggest updating pull request branches
+- [ ] Enable Automatically delete head branches
+ 
+### Pushes Section:
+- [ ] Pushes: Limit how many branches and tags can be updated in a single push (Default # is 5)
 
-### Repository Settings Checks
-
-- [ ] [Repository settings](#repository-settings) are configured per organization standard
+## Branches Tab
 - [ ] Individual branch protections are turned off
+
+## Tags Tab
 - [ ] Individual tag protections are turned off
+
+## Rules/Rulesets Tab
 - [ ] The repository uses the current rulesets
 - [ ] Teams are assigned to the repository
 - [ ] Individual contributors that are part of assigned teams are removed from contributors list
@@ -52,7 +49,6 @@ Perform repository audit
 ### App Integrations
 
 **If actions are enabled**:
-
 - [ ] Dependabot is enabled on the repository
 - [ ] Codecov is enabled on the repository
 
@@ -77,14 +73,12 @@ Perform repository audit
 - [ ] Code Coverage Reporting - Configure codecov on the repository
 - [ ] CodeQL is enabled on the repository
 - [ ] `npx playwright install deps` is used to install OS dependencies instead of `aptitude`
-- [ ] Code Formatting
-  - [ ] ESLint rules are applied to the codebase
-  - [ ] Prettier Formatting rules are applied to the codebase
 
-### Custom Properties
 
-- [ ] Custom properties: `last-ci-review-by-team` is set
-- [ ] Custom properties: `last-ci-review-date` is set (Use format: `YYYY-MM-DD`)
+### Code Formatting
+  - [ ] NodeJS Projects use ESLint/Prettier formatting
+  - [ ] Java Projects use Checkstyle/Spotless formatting
+
 
 ## Non-Administrative Audit Criteria
 
@@ -116,20 +110,11 @@ Perform repository audit
 
 ---
 
-## Repository Settings
-
-- [x] Require contributors to sign off on web-based commits
-- [x] Features: Issues
-- [x] Features: Preserve this Repository
-- [x] Features: Discussions
-- [x] Features: Projects
-- [x] Pull Requests: Allow Squash Merging
-- [x] Pull Requests: Always suggest updating pull request branches
-- [x] Pull Requests: Automatically delete head branches
-- [x] Pushes: Limit how many branches and tags can be updated in a single push
-
----
-
 ## Acceptance Criteria
 
 - [ ] All Audit Criteria have been met
+
+## Custom Properties - Marking Complete
+
+- [ ] Custom properties: `last-ci-review-by-team` is set
+- [ ] Custom properties: `last-ci-review-date` is set (Use format: `YYYY-MM-DD`)
