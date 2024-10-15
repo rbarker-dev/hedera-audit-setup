@@ -48,7 +48,7 @@ Actions are:
 
 ### Features Section:
 - [ ] Disable Wiki
-  - If it is in use, leave Wiki enabled. If not in use, remove functionality (uncheck Wiki option).
+  - If it is in use, leave Wiki enabled. If not in use, remove functionality (uncheck Wiki option). Should be disabled whenever possible.
 - [ ] Enable Issues
 - [ ] Enable Preserve this Repository
 - [ ] Enable Discussions
@@ -60,7 +60,7 @@ Actions are:
 - [ ] Enable Automatically delete head branches
  
 ### Pushes Section:
-- [ ] Pushes: Limit how many branches and tags can be updated in a single push
+- [ ] Pushes: Limit how many branches and tags can be updated in a single push (Default # is 5)
 
 ## Branches Tab
 - [ ] Individual branch protections are turned off
@@ -77,7 +77,6 @@ Actions are:
 ### App Integrations
 
 **If actions are enabled**:
-
 - [ ] Dependabot is enabled on the repository
 - [ ] Codecov is enabled on the repository
 
@@ -102,9 +101,11 @@ Actions are:
 - [ ] Code Coverage Reporting - Configure codecov on the repository
 - [ ] CodeQL is enabled on the repository
 - [ ] `npx playwright install deps` is used to install OS dependencies instead of `aptitude`
-- [ ] Code Formatting
-  - [ ] ESLint rules are applied to the codebase
-  - [ ] Prettier Formatting rules are applied to the codebase
+
+
+### Code Formatting
+  - [ ] NodeJS Projects use ESLint/Prettier formatting
+  - [ ] Java Projects use Checkstyle/Spotless formatting
 
 
 ## Non-Administrative Audit Criteria
