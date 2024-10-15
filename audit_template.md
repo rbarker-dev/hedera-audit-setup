@@ -3,44 +3,16 @@
 **Description**:
 Perform repository audit
 
----
-
-## Contents
-
-::TODO::
-Update the links below
-- [CI/CD Repository Audit](#cicd-repository-audit)
-  - [Contents](#contents)
-  - [Administrative Audit Criteria](#administrative-audit-criteria)
-    - [Check Actions State](#check-actions-state)
-    - [Check if Actions should be disabled](#check-if-actions-should-be-disabled)
-    - [Repository Settings Checks](#repository-settings-checks)
-    - [App Integrations](#app-integrations)
-    - [Security Checks](#security-checks)
-    - [Custom Properties](#custom-properties)
-  - [Non-Administrative Audit Criteria](#non-administrative-audit-criteria)
-    - [Dependabot](#dependabot)
-    - [Workflow checks](#workflow-checks)
-    - [Self Hosted Runners](#self-hosted-runners)
-    - [CODEOWNERS](#codeowners)
-    - [Other](#other)
-  - [Repository Settings](#repository-settings)
-  - [Acceptance Criteria](#acceptance-criteria)
-
 ## Administrative Audit Criteria
 
 ### Actions State
-Actions are:
-- [ ] Enabled
-- [ ] Disabled
+If actions have not been run in the previous 6 months they should be disabled:
+- [ ] Actions are/have been disabled
 
-**If actions have not been run in the previous 6 months they should be disabled**:
-- [ ] Actions have been disabled on the inactive repository
+If actions have run in the last 6 months then actions shall remain enabled:
+- [ ] Actions are enabled
 
-**Check if actions have run in the last 6 months**:
-- [ ] Actions have run in the last 6 months and shall remain enabled
-
-# Settings
+## Settings
 - [ ] Repository settings are configured per organization standard (listed below)
 
 ## General Tab
