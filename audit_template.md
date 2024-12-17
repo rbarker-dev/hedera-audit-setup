@@ -1,7 +1,10 @@
 # CI/CD Repository Audit
 
 **Description**:
-Perform repository audit
+Perform repository audit.
+
+**If there has not been a significant commit in the last year, add a note indicating so.**
+**Skip to `Acceptance Criteria` section at the bottom to complete close this issue.**
 
 # Administrative Audit Criteria
 
@@ -87,7 +90,7 @@ If actions have run in the last 6 months then actions shall remain enabled:
   - [ ] Java Projects use Checkstyle/Spotless formatting
   - [ ] CPP Projects use Clang Tidy
 
-## Non-Administrative Audit Criteria
+# Non-Administrative Audit Criteria
 
 ### Dependabot
 
@@ -120,6 +123,8 @@ If actions have run in the last 6 months then actions shall remain enabled:
 ## Acceptance Criteria
 
 - [ ] All Audit Criteria have been met
+- [ ] Inactive Repo (>1 year since last significant commit)
+- [ ] Empty Repo
 
 ## Custom Properties - Marking Complete
 
