@@ -47,28 +47,32 @@ If actions have run in the last 6 months then actions shall remain enabled:
 
 ### Actions Tab
 **If actions are enabled**:
-- [ ] Dependabot is enabled on the repository
 - [ ] Codecov is enabled on the repository
 
 ### Webhooks Tab
 - [ ] All webhooks present are needed and in use
 - [ ] Snyk is enabled on the repo (check to see if the webhook exists and is in use)
 
+### Code Security Tab
+- [ ] Dependabot is enabled on the repository
+
 ### Secrets and Variables Tab
 - [ ] GitHub secrets are employed to store sensitive data
 - [ ] Tokens are stored securely as GitHub Secrets
 
+### GitHub Apps
+- [ ] Code Coverage Reporting
+- [ ] CodeQL is enabled on the repository
+
 ## App Integrations
-- [ ] Dependabot is configured to monitor all relevant ecosystems
+- [ ] Dependabot is configured to monitor all relevant ecosystems (verify through `dependabot.yaml` file)
   - npm
   - electron
   - github actions
   - etc.
-- [ ] Code Coverage Reporting - Configure codecov on the repository
-- [ ] CodeQL is enabled on the repository
 
 ### Security Checks in Repo
-- [ ] Secrets Management
+- [ ] Secrets Management In Workflow Files (`/.github/workflows/`)
   - [ ] No hardcoded secrets in the workflow files or code
   - [ ] Secrets are referenced in CI via config files or environment variables
 - [ ] Executable Path Integrity
@@ -81,6 +85,7 @@ If actions have run in the last 6 months then actions shall remain enabled:
 ### Code Formatting
   - [ ] NodeJS Projects use ESLint/Prettier formatting
   - [ ] Java Projects use Checkstyle/Spotless formatting
+  - [ ] CPP Projects use Clang Tidy
 
 ## Non-Administrative Audit Criteria
 
