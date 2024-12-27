@@ -1,6 +1,6 @@
 import subprocess
 import json
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 def get_repositories(org_name):
   """Retrieve all repositories in an organization using gh CLI."""
@@ -18,11 +18,14 @@ def get_repositories(org_name):
 
 def filter_active_repos(repositories, days=365):
   """Filter repositories updated within the last specified days."""
-  cutoff_date = datetime.utcnow() - timedelta(days=days)
+  cutoff_date = datetime.now(timezone.utc) - timedelta(days=days)
   active_repos = [
-    repo["name"]
+    {
+      "name": repo["name"],
+      "updatedAt": datetime.fromisoformat(repo["updatedAt"].replace("Z", "+00:00")),
+    }
     for repo in repositories
-    if datetime.strptime(repo["updatedAt"], "%Y-%m-%dT%H:%M:%SZ") > cutoff_date
+    if datetime.fromisoformat(repo["updatedAt"].replace("Z", "+00:00")) > cutoff_date
   ]
   return active_repos
 
@@ -36,9 +39,12 @@ def main():
 
   active_repos = filter_active_repos(repositories)
   if active_repos:
+    # Sort by updatedAt in descending order (newest to oldest)
+    active_repos.sort(key=lambda repo: repo["updatedAt"], reverse=True)
+
     print("\nActive repositories (updated in the last year):")
     for repo in active_repos:
-      print(f"- {repo}")
+      print(f"- {repo['name']} (Last updated: {repo['updatedAt'].strftime('%Y-%m-%d %H:%M:%S %Z')})")
   else:
     print("\nNo repositories were active in the last year.")
 
