@@ -9,6 +9,21 @@ PROJECT_BOARD_MAP:dict[str,str] = {
     "swirldslabs": "\"Platform-CI Team\"" # Swirlds Labs
 }
 
+AUDITABLE_REPOS_FILE:str = "auditable_repos.txt"
+
+def write_audit_repos_list(repositories:list[dict[str,str]]) -> bool:
+    """Write the repo list to a .txt file."""
+    file_was_written:bool = False
+    try:
+        with open(AUDITABLE_REPOS_FILE, "w") as file:
+            file.write("OWNER(org),REPOSITORY,PROJECT BOARD\n")
+            for repo in repositories:
+                file.write(f"Auditing repo: {repo['owner']}/{repo['repository']}\tsee project:{repo['project']}\n")
+            file_was_written = True
+    except Exception as e:
+        print(f"Error writing to file: {e}")
+    return file_was_written
+
 def get_repositories(all_repos_list:list[str]) -> list[dict[str,str]]:
     repositories:list[dict[str,str]] = []
     active_repos_list:list[str] = []
@@ -16,7 +31,7 @@ def get_repositories(all_repos_list:list[str]) -> list[dict[str,str]]:
         with open(ACTIVE_REPOS_FILE,"r") as active_repos:
             active_repos_list = active_repos.readlines()
     except Exception as e:
-        print("Error reading the active_repos file:", e)
+        print(f"Error reading the {ACTIVE_REPOS_FILE} file:", e)
 
     all_repos = set(all_repos_list + active_repos_list)
     for repo in all_repos:
@@ -57,12 +72,14 @@ def gen_issue_script(audit_list_file:str, quarter:str, active_days:int=365):
             raise Exception("Error writing to file: {}".format(ACTIVE_REPOS_FILE))
 
         repositories:list[dict[str,str]] = get_repositories(all_repos_list=file_contents)
+        if not write_audit_repos_list(repositories=repositories):
+            print(f"Error writing to file: {AUDITABLE_REPOS_FILE}")
 
         for repository in repositories:
             repo:str = repository["repository"]
             org:str = repository["owner"]
             project:str = repository["project"]
-            cmd:str = command.replace["[ORG]",org].replace("[REPO]",repo).replace("[PROJECT]",project)
+            cmd:str = command.replace("[ORG]",org).replace("[REPO]",repo).replace("[PROJECT]",project)
             cmd_list.append(cmd)
 
         audit_script:str = "audit_issue_gen.sh"
