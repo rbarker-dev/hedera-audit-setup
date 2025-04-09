@@ -10,6 +10,10 @@ on:
         description: 'Number of days to check for repository activity'
         required: true
         default: 365
+      organizations:
+        description: 'List of organizations to audit'
+        required: true
+        default: 'hashgraph'
       start_date:
         description: 'Start date for the audit in YYYY-MM-DD format'
         required: true
@@ -66,9 +70,10 @@ jobs:
           ED=${{ inputs.end_date }}         # End date for the audit in YYYY-MM-DD format
           Q=${{ inputs.quarter }}           # Quarter when audit is created [Q1, Q2, Q3, Q4]
           DR=${{ inputs.dry_run_enabled }}  # Enable dry run mode
+          O=${{ inputs.organizations }}     # List of organizations to audit
         run: |
           # Add your audit script or command here
-          AUDIT_ARGS=-a ${AF} -s ${SD} -e ${ED} -q ${Q} -r ${AD}
+          AUDIT_ARGS=-a ${AF} -s ${SD} -e ${ED} -q ${Q} -o ${O} -r ${AD}
           if [[ "${DR}" = "true" ]]; then
             AUDIT_ARGS="${AUDIT_ARGS} -d"
           fi

@@ -4,35 +4,44 @@ set -e
 
 DRY_RUN=0 # Default so dry-run is disabled
 ACTIVE_DAYS=365 # Default active days
+ORG_LIST=()
 
-while getopts "a:r:s:e:q:d" opt; do
+while getopts "a:r:s:e:o:q:d" opt; do
   case $opt in
     a) AUDIT_LIST_FILE="$OPTARG" ;;
     r) ACTIVE_DAYS="$OPTARG" ;;
     s) START_DATE="$OPTARG" ;;
     e) END_DATE="$OPTARG" ;;
     q) QUARTER="$OPTARG" ;;
+    o) ORGS="$OPTARG" ;;
     d) DRY_RUN=1 ;;
-    *) echo "Usage: $0 -a AUDIT_LIST_FILE -s START_DATE -e END_DATE -q QUARTER [-r ACTIVE_DAYS] [-d]" >&2; exit 1 ;;
+    *) echo "Usage: $0 -a AUDIT_LIST_FILE -s START_DATE -e END_DATE -q QUARTER -o \"ORG1 ORG2 ...\" [-r ACTIVE_DAYS] [-d]" >&2; exit 1 ;;
   esac
 done
 
-if [ -z "${AUDIT_LIST_FILE}" ]; then
+if [[ -z "${AUDIT_LIST_FILE}" ]]; then
   echo "Audit list file is required."
   exit 1
 fi
 
-if [ -z "${START_DATE}" ]; then
+if [[ -z "${START_DATE}" ]]; then
   echo "Start date is required."
   exit 1
 fi
 
-if [ -z "${END_DATE}" ]; then
+if [[ -z "${END_DATE}" ]]; then
   echo "End date is required."
   exit 1
 fi
 
-if [ -z "${QUARTER}" ]; then
+if [[ -z "${ORGS}" ]]; then
+  echo "Organizations are required. Using default (hashgraph)"
+  ORG_LIST=("hashgraph")
+else
+  IFS=' ' read -r -a ORG_LIST <<< "$ORGS"
+fi
+
+if [[ -z "${QUARTER}" ]]; then
   echo "Error: Quarter is required." >&2
   exit 1
 fi
@@ -52,10 +61,11 @@ echo "Audit list file: ${AUDIT_LIST_FILE}"
 echo "Start date: ${START_DATE}"
 echo "End date: ${END_DATE}"
 echo "Quarter: ${QUARTER}"
-echo "Active days:" ${ACTIVE_DAYS}
+echo "Active days: ${ACTIVE_DAYS}"
+echo "Organizations: ${ORG_LIST}"
 
 echo "Calling Python to generate audit_setup.sh"
-python3 setup-ci-audit.py --start "${START_DATE}" --end "${END_DATE}" --use-initial-ci-review-date --org "hashgraph" "hiero-ledger" "swirlds" "swirldslabs"
+python3 setup-ci-audit.py --start "${START_DATE}" --end "${END_DATE}" --use-initial-ci-review-date --org "${ORG_LIST[@]}"
 
 echo "Changing permissions on audit_setup.sh"
 chmod 755 audit_setup.sh
