@@ -3,14 +3,16 @@ import sys
 from datetime import datetime,timedelta
 
 def run_gh_query(date_list:list[str], orgs:list[str], use_init_date:bool=False):
-    command_template:str = "gh search repos props.last-ci-review-date:[TEMPLATE_DATE] --archived=false --include-forks=false --owner=[ORG_NAME] --limit 200 --json name --jq '.[] | \"\(owner.login),\(.name)\"' | cat"
+    command_template:str = "gh search repos props.last-ci-review-date:[TEMPLATE_DATE] --archived=false --include-forks=false --owner=[ORG_NAME] --limit 200 --json name --jq '.[] | \"[ORG_NAME],\\(.name)\"' | cat"
     if use_init_date:
-        command_template = "gh search repos props.initial-ci-review-date:[TEMPLATE_DATE] --archived=false --include-forks=false --owner=[ORG_NAME] --limit 200 --json owner,name --jq '.[] | \"\(owner.login),\(.name)\"' | cat"
+        command_template = "gh search repos props.initial-ci-review-date:[TEMPLATE_DATE] --archived=false --include-forks=false --owner=[ORG_NAME] --limit 200 --json name --jq '.[] | \"[ORG_NAME],\\(.name)\"' | cat"
     with open("audit_setup.sh","w") as shell:
-        for day,org in date_list,orgs:
-            command = command_template.replace("[TEMPLATE_DATE]",day).replace("[ORG_NAME]",org)
-            shell.write(command + "\n")
-            shell.write("sleep 2\n")
+        for org in orgs:
+            for day in date_list:
+                command = command_template.replace("[TEMPLATE_DATE]",day).replace("[ORG_NAME]",org)
+                print(command)
+                shell.write(command + "\n")
+                shell.write("sleep 2\n")
 
 def get_quarter_date_range(quarter:int) -> tuple[str,str]:
     """
@@ -128,9 +130,12 @@ def main():
     the script will exit with a non-zero status code.
     """
     try:
+        print("Parsing command line arguments")
         start, end, quarter, org_names, use_init = parse_args()
+        print("Start date:", start, "End date:", end, "Quarter:", quarter, "Orgs:", org_names, "Use Initial Date:", use_init)
         use_date_range:bool = quarter not in [1,2,3,4]
         date_list:list[str] = get_date_list(start=start,end=end,quarter=quarter,use_range=use_date_range)
+        print("Running GitHub query")
         run_gh_query(date_list=date_list, orgs=org_names, use_init_date=use_init)
     except Exception as e:
         print(e)
