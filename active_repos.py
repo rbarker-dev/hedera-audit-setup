@@ -63,6 +63,10 @@ def write_active_repos_file(orgs:list[str], days:int=365) -> bool:
 
   Prints a list of active repositories, sorted in descending order by updated_time date.
   """
+  print("Looking for active repositories")
+  print("Active date range: {} days".format(days))
+  print("Organization(s): {}".format(", ".join(orgs)))
+
   wrote_file:bool = False
   repositories:dict[str,list[dict]] = get_repositories(orgs=orgs)
 

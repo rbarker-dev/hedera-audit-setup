@@ -130,7 +130,7 @@ def main():
     """
     try:
         start, end, quarter, org_names, use_init = parse_args()
-        print("Start date:", start, "End date:", end, "Quarter:", quarter, "Orgs:", org_names, "Use Initial Date:", use_init)
+        print("Start date:", start, "\nEnd date:", end, "\nQuarter:", quarter, "\nOrgs:", org_names, "\nUse Initial Date:", use_init)
         use_date_range:bool = quarter not in [1,2,3,4]
         date_list:list[str] = get_date_list(start=start,end=end,quarter=quarter,use_range=use_date_range)
         print("Running GitHub query")
