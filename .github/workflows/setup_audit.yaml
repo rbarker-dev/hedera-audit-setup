@@ -1,0 +1,80 @@
+name: Setup Audit
+on:
+  workflow_dispatch:
+    inputs:
+      audit_list_file:
+        description: 'File name to create'
+        required: true
+        default: 'audit_list.txt'
+      active_days:
+        description: 'Number of days to check for repository activity'
+        required: true
+        default: 365
+      organizations:
+        description: 'List of organizations to audit'
+        required: true
+        default: 'hashgraph'
+      start_date:
+        description: 'Start date for the audit in YYYY-MM-DD format'
+        required: true
+      end_date:
+        description: 'End date for the audit in YYYY-MM-DD format'
+        required: true
+      quarter:
+        description: 'Quarter when audit was created [Q1, Q2, Q3, Q4]'
+        required: true
+        type: choice
+        options:
+          - Q1
+          - Q2
+          - Q3
+          - Q4
+      dry_run_enabled:
+        description: 'Enable dry run mode'
+        required: false
+        default: 'false'
+
+defaults:
+  shell: bash
+
+permissions:
+  contents: write
+  id-token: write
+  issues: write
+
+jobs:
+  setup_audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Setup gh CLI
+        env:
+          GH_CLI_TOKEN: ${{ secrets.GH_CLI_TOKEN }}
+        run: |
+          gh auth login --with-token < <(echo "${GH_CLI_TOKEN}")
+
+      - name: Run audit prep
+        env:
+          AD=${{ inputs.active_days }}      # Number of days to check for repository activity
+          AF=${{ inputs.audit_list_file }}  # File name to create
+          SD=${{ inputs.start_date }}       # Start date for the audit in YYYY-MM-DD format
+          ED=${{ inputs.end_date }}         # End date for the audit in YYYY-MM-DD format
+          Q=${{ inputs.quarter }}           # Quarter when audit is created [Q1, Q2, Q3, Q4]
+          DR=${{ inputs.dry_run_enabled }}  # Enable dry run mode
+          O=${{ inputs.organizations }}     # List of organizations to audit
+        run: |
+          # Add your audit script or command here
+          AUDIT_ARGS=-a "${AF}" -s "${SD}" -e "${ED}" -q "${Q}" -o "${O}" -r "${AD}"
+          if [[ "${DR}" = "true" ]]; then
+            AUDIT_ARGS="${AUDIT_ARGS} -d"
+          fi
+          ./run_audit_prep.sh "${AUDIT_ARGS}"

@@ -1,4 +1,8 @@
 **/*.txt
+**/auditable_repos.md
 **/audit_setup.sh
 **/audit_issue_gen.sh
+**/active_repos.csv
 .idea/*
+**/__pycache__/
+
