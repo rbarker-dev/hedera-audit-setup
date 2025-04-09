@@ -4,13 +4,13 @@ import subprocess
 import sys
 from datetime import datetime, timedelta, timezone
 
+ACTIVE_REPOS_FILE:str = "active_repos.csv"
+
 def write_to_file(repositories:list[dict]) -> bool:
   """Write the repo list to a .csv file."""
   file_was_written:bool = False
-  file_name = "active_repos.csv"
   try:
-    with open(file_name, "w") as file:
-      file.write("org,name\n")
+    with open(ACTIVE_REPOS_FILE, "w") as file:
       for repo in repositories:
         file.write(f"{repo['org']},{repo['name']}\n")
       file_was_written = True
@@ -50,6 +50,38 @@ def filter_active_repos(repositories:dict[str,list[dict]], days:int=365) -> list
         )
   return active_repos
 
+def write_active_repos_file(orgs:list[str], days:int) -> bool:
+  """
+  List all active repositories in the given organization(s) that have been updated
+  within the last time period.
+
+  Args:
+    orgs (list[str]): List of GitHub organization names
+    days (int): Number of days to check for activity
+  Returns:
+    bool: True if successful, False otherwise
+
+  Prints a list of active repositories, sorted in descending order by updated_time date.
+  """
+  wrote_file:bool = False
+  repositories:dict[str,list[dict]] = get_repositories(orgs=orgs)
+
+  if not repositories:
+    print("No repositories found or an error occurred.")
+
+  active_repos = filter_active_repos(repositories=repositories, days=days)
+  if active_repos:
+    print(f"\nActive repositories (updated in the last {days} days):")
+    for repo in active_repos:
+      print(f"- {repo['org']}/{repo['name']} (Last updated: {repo['updated_time'].strftime('%Y-%m-%d %H:%M:%S %Z')})")
+
+    wrote_file = write_to_file(repositories=active_repos)
+    if not wrote_file:
+      print("Error writing to file.")
+  else:
+    print(f"\nNo repositories were active in the last {days} days.")
+  return wrote_file
+
 def parse_args() -> tuple[list[str],int]:
   """
   Parse command line arguments.
@@ -80,41 +112,9 @@ def parse_args() -> tuple[list[str],int]:
 
   return org_names, days
 
-def write_active_repos_file() -> bool:
-  """
-  List all active repositories in the given organization(s) that have been updated
-  within the last time period.
-
-  Args:
-    org_names (list[str]): List of GitHub organization names
-    days (int): Number of days to check for activity
-  Returns:
-    bool: True if successful, False otherwise
-
-  Prints a list of active repositories, sorted in descending order by updated_time date.
-  """
-  wrote_file:bool = False
-  org_names, days = parse_args() # org_name is a list of strings; days is a positive int
-  repositories:dict[str,list[dict]] = get_repositories(orgs=org_names)
-
-  if not repositories:
-    print("No repositories found or an error occurred.")
-
-  active_repos = filter_active_repos(repositories=repositories, days=days)
-  if active_repos:
-    print(f"\nActive repositories (updated in the last {days} days):")
-    for repo in active_repos:
-      print(f"- {repo['org']}/{repo['name']} (Last updated: {repo['updated_time'].strftime('%Y-%m-%d %H:%M:%S %Z')})")
-
-    wrote_file = write_to_file(repositories=active_repos)
-    if not wrote_file:
-      print("Error writing to file.")
-  else:
-    print(f"\nNo repositories were active in the last {days} days.")
-  return wrote_file
-
 def main():
-  if not write_active_repos_file():
+  org_names, days = parse_args() # org_name is a list of strings; days is a positive int
+  if not write_active_repos_file(orgs=org_names, days=days):
     sys.exit(1)
 
 if __name__ == "__main__":
