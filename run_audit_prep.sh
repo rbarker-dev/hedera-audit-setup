@@ -5,7 +5,7 @@ set -e
 DRY_RUN=0 # Default so dry-run is disabled
 ACTIVE_DAYS=365 # Default active days
 
-while getopts "a:s:e:q:r:d" opt; do
+while getopts "a:r:s:e:q:d" opt; do
   case $opt in
     a) AUDIT_LIST_FILE="$OPTARG" ;;
     r) ACTIVE_DAYS="$OPTARG" ;;
