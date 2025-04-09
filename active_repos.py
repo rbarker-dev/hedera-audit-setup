@@ -50,7 +50,7 @@ def filter_active_repos(repositories:dict[str,list[dict]], days:int=365) -> list
         )
   return active_repos
 
-def write_active_repos_file(orgs:list[str], days:int) -> bool:
+def write_active_repos_file(orgs:list[str], days:int=365) -> bool:
   """
   List all active repositories in the given organization(s) that have been updated
   within the last time period.
