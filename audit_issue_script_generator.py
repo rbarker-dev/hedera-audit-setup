@@ -9,16 +9,18 @@ PROJECT_BOARD_MAP:dict[str,str] = {
     "swirldslabs": "\"Platform-CI Team\"" # Swirlds Labs
 }
 
-AUDITABLE_REPOS_FILE:str = "auditable_repos.txt"
+AUDITABLE_REPOS_FILE:str = "auditable_repos.md"
 
 def write_audit_repos_list(repositories:list[dict[str,str]]) -> bool:
     """Write the repo list to a .txt file."""
     file_was_written:bool = False
     try:
         with open(AUDITABLE_REPOS_FILE, "w") as file:
-            file.write("OWNER(org),REPOSITORY,PROJECT BOARD\n")
+            file.write("# Audit List\n\n")
+            file.write("| Repository | Project Board |\n")
+            file.write("|------------|----------------|\n")
             for repo in repositories:
-                file.write(f"Auditing repo: {repo['owner']}/{repo['repository']}\tsee project:{repo['project']}\n")
+                file.write(f"| {repo['owner']}/{repo['repository']} | {repo['project']} |\n")
             file_was_written = True
     except Exception as e:
         print(f"Error writing to file: {e}")
@@ -33,7 +35,7 @@ def get_repositories(all_repos_list:list[str]) -> list[dict[str,str]]:
     except Exception as e:
         print(f"Error reading the {ACTIVE_REPOS_FILE} file:", e)
 
-    all_repos = set(all_repos_list + active_repos_list)
+    all_repos = [repo for repo in all_repos_list if repo in active_repos_list]
     for repo in all_repos:
         org:str = repo.strip().split(',')[0]
         name:str = repo.strip().split(',')[1]
