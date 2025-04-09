@@ -1,52 +1,111 @@
-import subprocess
+import argparse
 import json
+import subprocess
+import sys
 from datetime import datetime, timedelta, timezone
 
-def get_repositories(org_name):
-  """Retrieve all repositories in an organization using gh CLI."""
+def write_to_file(repositories:list[dict]) -> bool:
+  """Write the repo list to a .csv file."""
+  file_was_written:bool = False
+  file_name = "active_repos.csv"
   try:
-    result = subprocess.run(
-        ["gh", "repo", "list", org_name, "--json", "name,updatedAt", "--limit", "1000"],
-        capture_output=True,
-        text=True,
-        check=True,
-    )
-    return json.loads(result.stdout)
-  except subprocess.CalledProcessError as e:
-    print(f"Error retrieving repositories: {e.stderr}")
-    return []
+    with open(file_name, "w") as file:
+      file.write("org,name\n")
+      for repo in repositories:
+        file.write(f"{repo['org']},{repo['name']}\n")
+      file_was_written = True
+  except Exception as e:
+    print(f"Error writing to file: {e}")
+  return file_was_written
 
-def filter_active_repos(repositories, days=365):
+def get_repositories(orgs:list[str]) -> dict[str, list[dict]]:
+  """Retrieve all repositories in an organization using gh CLI."""
+  repo_list:dict[str,list[dict]] = {}
+  for org in orgs:
+    try:
+      result = subprocess.run(
+          ["gh", "repo", "list", org, "--json", "name,updated_time", "--limit", "1000"],
+          capture_output=True,
+          text=True,
+          check=True,
+      )
+      repo_list[org] = json.loads(result.stdout)
+    except subprocess.CalledProcessError as e:
+      print(f"Error retrieving repositories: {e.stderr}")
+      repo_list[org] = []
+  return repo_list
+
+def filter_active_repos(repositories:dict[str,list[dict]], days:int=365) -> list[dict]:
   """Filter repositories updated within the last specified days."""
   cutoff_date = datetime.now(timezone.utc) - timedelta(days=days)
-  active_repos = [
-    {
-      "name": repo["name"],
-      "updatedAt": datetime.fromisoformat(repo["updatedAt"].replace("Z", "+00:00")),
-    }
-    for repo in repositories
-    if datetime.fromisoformat(repo["updatedAt"].replace("Z", "+00:00")) > cutoff_date
-  ]
+  active_repos:list[dict] = []
+  for org,repository_set in repositories.items():
+    for repo in repository_set:
+      if datetime.fromisoformat(repo["updated_time"].replace("Z", "+00:00")) > cutoff_date:
+        active_repos.append(
+          dict(
+            org=org,
+            name=repo["name"],
+            updated_time=datetime.fromisoformat(repo["updated_time"].replace("Z", "+00:00")))
+        )
   return active_repos
 
+def parse_args() -> tuple[list[str],int]:
+  """
+  Parse command line arguments.
+
+  Returns:
+      org_names (list[str]): List of GitHub organization names
+      days (int): Number of days to check for activity
+  """
+  parser = argparse.ArgumentParser(description="List active repositories in an organization.")
+  parser.add_argument("-o", "--org", type=str, nargs="+", default=["hashgraph"], dest="org_names", help="GitHub organization name (default: hashgraph)")
+  parser.add_argument("-d", "--days", type=int, default=365, dest="days", help="Number of days to check for activity (default: 365)")
+
+  org_names:list[str] = []
+  days:int = 0
+  args:argparse.Namespace = parser.parse_args()
+
+  if args.org_names is None or args.org_names == [] or "" in args.org_names:
+    print("No organization name provided. Using default: hashgraph")
+    org_names = ["hashgraph"]
+
+  if args.days is None or args.days <= 0:
+    print("No days provided. Using default: 365")
+    days = 365
+
+  return org_names, days
+
 def main():
-  org_name = input("Enter the organization name: ").strip()
-  print("Fetching repositories...")
-  repositories = get_repositories(org_name)
+  """
+  List all active repositories in the given organization(s) that have been updated
+  within the last time period.
+
+  Args:
+    org_names (list[str]): List of GitHub organization names
+    days (int): Number of days to check for activity
+
+  Prints a list of active repositories, sorted in descending order by updated_time date.
+  """
+  org_names, days = parse_args() # org_name is a list of strings; days is a positive int
+  repositories:dict[str,list[dict]] = get_repositories(orgs=org_names)
+
   if not repositories:
     print("No repositories found or an error occurred.")
-    return
+    sys.exit(1)
 
-  active_repos = filter_active_repos(repositories)
+  active_repos = filter_active_repos(repositories=repositories, days=days)
   if active_repos:
-    # Sort by updatedAt in descending order (newest to oldest)
-    active_repos.sort(key=lambda repo: repo["updatedAt"], reverse=True)
-
-    print("\nActive repositories (updated in the last year):")
+    print(f"\nActive repositories (updated in the last {days} days):")
     for repo in active_repos:
-      print(f"- {repo['name']} (Last updated: {repo['updatedAt'].strftime('%Y-%m-%d %H:%M:%S %Z')})")
+      print(f"- {repo['org']}/{repo['name']} (Last updated: {repo['updated_time'].strftime('%Y-%m-%d %H:%M:%S %Z')})")
+
+    if not write_to_file(repositories=active_repos):
+      print("Error writing to file.")
+      sys.exit(2)
   else:
     print("\nNo repositories were active in the last year.")
+    sys.exit(3)
 
 if __name__ == "__main__":
   main()
