@@ -100,7 +100,7 @@ def gen_issue_script(audit_list_file:str, quarter:str, active_days:int=365):
 
     print("Complete.")
 
-def parse_audit_args() -> tuple[str,str, int]:
+def parse_audit_args() -> tuple[str,str,int]:
     from os.path import exists as path_exists # just need to check if os.path.exists() returns true for the audit file
 
     parser = argparse.ArgumentParser(description="Generate a script that will create several github issues across the repositories in the specified audit_list.")

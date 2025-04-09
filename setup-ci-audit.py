@@ -3,9 +3,9 @@ import sys
 from datetime import datetime,timedelta
 
 def run_gh_query(date_list:list[str], orgs:list[str], use_init_date:bool=False):
-    command_template:str = "gh search repos props.last-ci-review-date:[TEMPLATE_DATE] --archived=false --include-forks=false --owner=[ORG_NAME] --limit 200 --json owner,name --jq '.[] | \"\\(.owner.login),\\(.name)\"' | cat"
+    command_template:str = "gh search repos props.last-ci-review-date:[TEMPLATE_DATE] --archived=false --include-forks=false --owner=[ORG_NAME] --limit 1000 --json owner,name --jq '.[] | \"\\(.owner.login),\\(.name)\"' | cat"
     if use_init_date:
-        command_template = "gh search repos props.initial-ci-review-date:[TEMPLATE_DATE] --archived=false --include-forks=false --owner=[ORG_NAME] --limit 200 --json owner,name --jq '.[] | \"\\(.owner.login),\\(.name)\"' | cat"
+        command_template = "gh search repos props.initial-ci-review-date:[TEMPLATE_DATE] --archived=false --include-forks=false --owner=[ORG_NAME] --limit 1000 --json owner,name --jq '.[] | \"\\(.owner.login),\\(.name)\"' | cat"
     with open("audit_setup.sh","w") as shell:
         for org in orgs:
             for day in date_list:

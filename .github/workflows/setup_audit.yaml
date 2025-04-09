@@ -73,8 +73,8 @@ jobs:
           O=${{ inputs.organizations }}     # List of organizations to audit
         run: |
           # Add your audit script or command here
-          AUDIT_ARGS=-a ${AF} -s ${SD} -e ${ED} -q ${Q} -o ${O} -r ${AD}
+          AUDIT_ARGS=-a "${AF}" -s "${SD}" -e "${ED}" -q "${Q}" -o "${O}" -r "${AD}"
           if [[ "${DR}" = "true" ]]; then
             AUDIT_ARGS="${AUDIT_ARGS} -d"
           fi
-          ./run_audit_prep.sh ${AUDIT_ARGS}
+          ./run_audit_prep.sh "${AUDIT_ARGS}"
