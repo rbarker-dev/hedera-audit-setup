@@ -1,4 +1,5 @@
 **/*.txt
 **/audit_setup.sh
 **/audit_issue_gen.sh
+**/active_repos.csv
 .idea/*

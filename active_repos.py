@@ -24,7 +24,7 @@ def get_repositories(orgs:list[str]) -> dict[str, list[dict]]:
   for org in orgs:
     try:
       result = subprocess.run(
-          ["gh", "repo", "list", org, "--json", "name,updated_time", "--limit", "1000"],
+          ["gh", "repo", "list", org, "--json", "name,updatedAt", "--limit", "1000"],
           capture_output=True,
           text=True,
           check=True,
@@ -41,12 +41,12 @@ def filter_active_repos(repositories:dict[str,list[dict]], days:int=365) -> list
   active_repos:list[dict] = []
   for org,repository_set in repositories.items():
     for repo in repository_set:
-      if datetime.fromisoformat(repo["updated_time"].replace("Z", "+00:00")) > cutoff_date:
+      if datetime.fromisoformat(repo["updatedAt"].replace("Z", "+00:00")) > cutoff_date:
         active_repos.append(
           dict(
             org=org,
             name=repo["name"],
-            updated_time=datetime.fromisoformat(repo["updated_time"].replace("Z", "+00:00")))
+            updated_time=datetime.fromisoformat(repo["updatedAt"].replace("Z", "+00:00")))
         )
   return active_repos
 
@@ -69,14 +69,18 @@ def parse_args() -> tuple[list[str],int]:
   if args.org_names is None or args.org_names == [] or "" in args.org_names:
     print("No organization name provided. Using default: hashgraph")
     org_names = ["hashgraph"]
+  else:
+    org_names = args.org_names
 
   if args.days is None or args.days <= 0:
     print("No days provided. Using default: 365")
     days = 365
+  else:
+    days = args.days
 
   return org_names, days
 
-def main():
+def write_active_repos_file() -> bool:
   """
   List all active repositories in the given organization(s) that have been updated
   within the last time period.
@@ -84,15 +88,17 @@ def main():
   Args:
     org_names (list[str]): List of GitHub organization names
     days (int): Number of days to check for activity
+  Returns:
+    bool: True if successful, False otherwise
 
   Prints a list of active repositories, sorted in descending order by updated_time date.
   """
+  wrote_file:bool = False
   org_names, days = parse_args() # org_name is a list of strings; days is a positive int
   repositories:dict[str,list[dict]] = get_repositories(orgs=org_names)
 
   if not repositories:
     print("No repositories found or an error occurred.")
-    sys.exit(1)
 
   active_repos = filter_active_repos(repositories=repositories, days=days)
   if active_repos:
@@ -100,12 +106,16 @@ def main():
     for repo in active_repos:
       print(f"- {repo['org']}/{repo['name']} (Last updated: {repo['updated_time'].strftime('%Y-%m-%d %H:%M:%S %Z')})")
 
-    if not write_to_file(repositories=active_repos):
+    wrote_file = write_to_file(repositories=active_repos)
+    if not wrote_file:
       print("Error writing to file.")
-      sys.exit(2)
   else:
-    print("\nNo repositories were active in the last year.")
-    sys.exit(3)
+    print(f"\nNo repositories were active in the last {days} days.")
+  return wrote_file
+
+def main():
+  if not write_active_repos_file():
+    sys.exit(1)
 
 if __name__ == "__main__":
   main()
