@@ -62,7 +62,7 @@ echo "Start date: ${START_DATE}"
 echo "End date: ${END_DATE}"
 echo "Quarter: ${QUARTER}"
 echo "Active days: ${ACTIVE_DAYS}"
-echo "Organizations: ${ORG_LIST}"
+echo "Organizations: ${ORG_LIST[@]}"
 
 echo "Calling Python to generate audit_setup.sh"
 python3 setup-ci-audit.py --start "${START_DATE}" --end "${END_DATE}" --use-initial-ci-review-date --org "${ORG_LIST[@]}"
