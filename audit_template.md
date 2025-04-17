@@ -73,6 +73,7 @@ If actions have run in the last 6 months then actions shall remain enabled:
   - electron
   - github actions
   - etc.
+- [ ] DCO-2 is configured as the DCO check
 
 ### Security Checks in Repo
 - [ ] Secrets Management In Workflow Files (`/.github/workflows/`)
