@@ -75,7 +75,14 @@ If actions have run in the last 6 months then actions shall remain enabled:
   - etc.
 - [ ] DCO-2 is configured as the DCO check
 
-### Security Checks in Repo
+### Code Formatting
+  - [ ] NodeJS Projects use ESLint/Prettier formatting
+  - [ ] Java Projects use Checkstyle/Spotless formatting
+  - [ ] CPP Projects use Clang Tidy
+
+# Workflow Audit Criteria
+
+### Security Checks in Workflows
 - [ ] Secrets Management In Workflow Files (`/.github/workflows/`)
   - [ ] No hardcoded secrets in the workflow files or code
   - [ ] Secrets are referenced in CI via config files or environment variables
@@ -86,25 +93,12 @@ If actions have run in the last 6 months then actions shall remain enabled:
   - [ ] Expected checksums/hashes are stored securely and referenced through the CI pipeline
 - [ ] `npx playwright install deps` is used to install OS dependencies instead of `aptitude`
 
-### Code Formatting
-  - [ ] NodeJS Projects use ESLint/Prettier formatting
-  - [ ] Java Projects use Checkstyle/Spotless formatting
-  - [ ] CPP Projects use Clang Tidy
-
-# Non-Administrative Audit Criteria
-
-### Dependabot
-
-- [ ] dependabot.yml is up to date
-
 ### Workflow checks
 
 - [ ] Appropriate permissions are set within the github workflows
 - [ ] All steps are named
 - [ ] All workflow actions are using pinned commits
 - [ ] The Step-Security Hardened Security action is enabled on each workflow job
-- [ ] Ensure no hard-coded keys in workflows
-  - [ ] Alert devops-ci administrative team if new github secrets are needed to resolve hard-coded keys
 
 ### Self Hosted Runners
 
@@ -129,5 +123,11 @@ If actions have run in the last 6 months then actions shall remain enabled:
 
 ## Custom Properties - Marking Complete
 
+Update the `repo-properties.json` file in the `ORG/governance` repository
+
+- [ ] Custom properties: `initial-ci-review-by-team` is set
+- [ ] Custom properties: `initial-ci-review-date` is set (Use format: `YYYY-MM-DD`)
 - [ ] Custom properties: `last-ci-review-by-team` is set
 - [ ] Custom properties: `last-ci-review-date` is set (Use format: `YYYY-MM-DD`)
+
+*Note: assumes `ORG/governance` is a valid repository in the Github Organization being audited*
