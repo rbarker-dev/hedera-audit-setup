@@ -64,13 +64,13 @@ jobs:
 
       - name: Run audit prep
         env:
-          AD=${{ inputs.active_days }}      # Number of days to check for repository activity
-          AF=${{ inputs.audit_list_file }}  # File name to create
-          SD=${{ inputs.start_date }}       # Start date for the audit in YYYY-MM-DD format
-          ED=${{ inputs.end_date }}         # End date for the audit in YYYY-MM-DD format
-          Q=${{ inputs.quarter }}           # Quarter when audit is created [Q1, Q2, Q3, Q4]
-          DR=${{ inputs.dry_run_enabled }}  # Enable dry run mode
-          O=${{ inputs.organizations }}     # List of organizations to audit
+          AD: ${{ inputs.active_days }}      # Number of days to check for repository activity
+          AF: ${{ inputs.audit_list_file }}  # File name to create
+          SD: ${{ inputs.start_date }}       # Start date for the audit in YYYY-MM-DD format
+          ED: ${{ inputs.end_date }}         # End date for the audit in YYYY-MM-DD format
+          Q:  ${{ inputs.quarter }}          # Quarter when audit is created [Q1, Q2, Q3, Q4]
+          DR: ${{ inputs.dry_run_enabled }}  # Enable dry run mode
+          O:  ${{ inputs.organizations }}    # List of organizations to audit
         run: |
           # Add your audit script or command here
           AUDIT_ARGS=-a "${AF}" -s "${SD}" -e "${ED}" -q "${Q}" -o "${O}" -r "${AD}"
