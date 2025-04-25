@@ -3,10 +3,11 @@
 set -e
 
 DRY_RUN=0 # Default so dry-run is disabled
+NO_DATES_FLAG=0 # Default so dates are enabled
 ACTIVE_DAYS=365 # Default active days
 ORG_LIST=()
 
-while getopts "a:r:s:e:o:q:d" opt; do
+while getopts "a:r:s:e:o:q:dn" opt; do
   case $opt in
     a) AUDIT_LIST_FILE="$OPTARG" ;;
     r) ACTIVE_DAYS="$OPTARG" ;;
@@ -15,7 +16,8 @@ while getopts "a:r:s:e:o:q:d" opt; do
     q) QUARTER="$OPTARG" ;;
     o) ORGS="$OPTARG" ;;
     d) DRY_RUN=1 ;;
-    *) echo "Usage: $0 -a AUDIT_LIST_FILE -s START_DATE -e END_DATE -q QUARTER -o \"ORG1 ORG2 ...\" [-r ACTIVE_DAYS] [-d]" >&2; exit 1 ;;
+    n) NO_DATES_FLAG=1 ;;
+    *) echo "Usage: $0 -a AUDIT_LIST_FILE -q QUARTER -o \"ORG1 ORG2 ...\" [-s START_DATE] [-e END_DATE] [-r ACTIVE_DAYS] [-n] [-d]" >&2; exit 1 ;;
   esac
 done
 
@@ -24,12 +26,12 @@ if [[ -z "${AUDIT_LIST_FILE}" ]]; then
   exit 1
 fi
 
-if [[ -z "${START_DATE}" ]]; then
+if [[ NO_DATES_FLAG -eq 0 ]] && [[ -z "${START_DATE}" ]]; then
   echo "Start date is required."
   exit 1
 fi
 
-if [[ -z "${END_DATE}" ]]; then
+if [[ NO_DATES_FLAG -eq 0 ]] && [[ -z "${END_DATE}" ]]; then
   echo "End date is required."
   exit 1
 fi
@@ -57,6 +59,7 @@ if ! [[ "$ACTIVE_DAYS" =~ ^[1-9][0-9]*$ ]]; then
 fi
 
 echo "Dry run: ${DRY_RUN}"
+echo "NO_DATES_FLAG: ${NO_DATES_FLAG}"
 echo "Audit list file: ${AUDIT_LIST_FILE}"
 echo "Start date: ${START_DATE}"
 echo "End date: ${END_DATE}"
@@ -65,7 +68,12 @@ echo "Active days: ${ACTIVE_DAYS}"
 echo "Organizations: ${ORG_LIST[@]}"
 
 echo "Calling Python to generate audit_setup.sh"
-python3 setup-ci-audit.py --start "${START_DATE}" --end "${END_DATE}" --use-initial-ci-review-date --org "${ORG_LIST[@]}"
+
+if [[ NO_DATES_FLAG -eq 0 ]]; then
+  python3 setup-ci-audit.py --start "${START_DATE}" --end "${END_DATE}" --use-initial-ci-review-date --org "${ORG_LIST[@]}"
+else
+  python3 setup-ci-audit.py --no-dates-on-repo-flag --org "${ORG_LIST[@]}"
+fi
 
 echo "Changing permissions on audit_setup.sh"
 chmod 755 audit_setup.sh
