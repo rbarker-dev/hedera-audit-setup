@@ -78,6 +78,13 @@ python3 audit_issue_script_generator.py --file "${AUDIT_LIST_FILE}" --quarter "$
 
 if [ $DRY_RUN -eq 1 ]; then
   echo "Skipping audit_issue_gen.sh because of dry run mode"
+  echo "Would run:"
+  echo "*********************"
+  echo "*  audit_setup.sh   *"
+  echo "*********************"
+  cat audit_issue_gen.sh
+  echo "*********************"
+  echo "*********************"
 else
   echo "Changing permissions on audit_issue_gen.sh"
   chmod 755 audit_issue_gen.sh
