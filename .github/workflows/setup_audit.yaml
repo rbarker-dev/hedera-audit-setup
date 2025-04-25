@@ -32,10 +32,12 @@ on:
       dry_run_enabled:
         description: 'Enable dry run mode'
         required: false
-        default: 'false'
+        type: boolean
+        default: false
 
 defaults:
-  shell: bash
+  run:
+    shell: bash
 
 permissions:
   contents: write
@@ -74,7 +76,7 @@ jobs:
         run: |
           # Add your audit script or command here
           AUDIT_ARGS=-a "${AF}" -s "${SD}" -e "${ED}" -q "${Q}" -o "${O}" -r "${AD}"
-          if [[ "${DR}" = "true" ]]; then
+          if [[ "${DR}" == "true" ]]; then
             AUDIT_ARGS="${AUDIT_ARGS} -d"
           fi
           ./run_audit_prep.sh "${AUDIT_ARGS}"
