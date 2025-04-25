@@ -60,9 +60,9 @@ jobs:
 
       - name: Setup gh CLI
         env:
-          GH_TOKEN: ${{ secrets.GH_CLI_TOKEN }}
+          GH_CLI_TOKEN: ${{ secrets.GH_CLI_TOKEN }}
         run: |
-          gh auth login --with-token
+          echo GH_CLI_TOKEN | gh auth login --with-token
 
       - name: Run audit prep
         env:
