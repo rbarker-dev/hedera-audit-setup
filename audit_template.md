@@ -47,10 +47,13 @@ If actions have run in the last 6 months then actions shall remain enabled:
 
 ### Rules/Rulesets Tab
 - [ ] The repository uses the current rulesets
+- [ ] If appropriate, global rules are enabled/disabled for the repo
 
 ### Actions Tab
 **If actions are enabled**:
 - [ ] Codecov is enabled on the repository
+- [ ] Title check is enabled
+- [ ] DCO check is enabled
 
 ### Webhooks Tab
 - [ ] All webhooks present are needed and in use
@@ -66,23 +69,33 @@ If actions have run in the last 6 months then actions shall remain enabled:
 ### GitHub Apps
 - [ ] Code Coverage Reporting
 - [ ] CodeQL is enabled on the repository
+- [ ] Codacy is enabled on the repository
 
 ## App Integrations
 - [ ] Dependabot is configured to monitor all relevant ecosystems (verify through `dependabot.yaml` file)
+  - Link to [relevant ecosystems](https://docs.github.com/en/code-security/dependabot/ecosystems-supported-by-dependabot/supported-ecosystems-and-repositories)
   - npm
   - electron
   - github actions
   - etc.
 - [ ] DCO-2 is configured as the DCO check
 
-### Code Formatting
-  - [ ] NodeJS Projects use ESLint/Prettier formatting
-  - [ ] Java Projects use Checkstyle/Spotless formatting
-  - [ ] CPP Projects use Clang Tidy
+## Docker Files
+
+## Code Formatting
+- [ ] NodeJS Projects use ESLint/Prettier formatting
+- [ ] Java Projects use Checkstyle/Spotless formatting
+- [ ] CPP Projects use Clang Tidy
+- [ ] Rust
+- [ ] Swift
+- [ ] Go
+
+## CODEOWNERS
+- [ ] `.github/CODEOWNERS` is valid and up-to-date
 
 # Workflow Audit Criteria
 
-### Security Checks in Workflows
+## Security Checks in Workflows
 - [ ] Secrets Management In Workflow Files (`/.github/workflows/`)
   - [ ] No hardcoded secrets in the workflow files or code
   - [ ] Secrets are referenced in CI via config files or environment variables
@@ -91,24 +104,22 @@ If actions have run in the last 6 months then actions shall remain enabled:
     - integrity checks should use either checksums or cryptographic hashes for verification
   - [ ] Checksums/hashes are verified during CI process to detect unauthorized changes
   - [ ] Expected checksums/hashes are stored securely and referenced through the CI pipeline
+  - [ ] Use pinned versions of Docker files
 - [ ] `npx playwright install deps` is used to install OS dependencies instead of `aptitude`
 
-### Workflow checks
+## Workflow checks
 
-- [ ] Appropriate permissions are set within the github workflows
+- [ ] Appropriate permissions are set within the GitHub workflows
 - [ ] All steps are named
 - [ ] All workflow actions are using pinned commits
-- [ ] The Step-Security Hardened Security action is enabled on each workflow job
+- [ ] The step-security hardened security action is enabled on each workflow job
+  - [ ] If the step-security dashboard reports action with score of <6, request a step-security version of the action
 
-### Self Hosted Runners
+## Self Hosted Runners
 
 - [ ] The Repository is using the latitude runner group label for the `runs-on` stanza
 
-### CODEOWNERS
-
-- [ ] `.github/CODEOWNERS` is valid and up-to-date
-
-### Other
+## Other
 
 - [ ] *If Applicable*: Alert repository owners of software versions that are no longer supported
 - [ ] *If Applicable*: Alert repository owners when software versions are within 3 months of losing support
