@@ -24,7 +24,7 @@ If actions have run in the last 6 months then actions shall remain enabled:
   - If it is in use, leave Wiki enabled. If not in use, remove functionality (uncheck Wiki option). Should be disabled whenever possible.
 - [ ] Enable Issues
 - [ ] Enable Preserve this Repository
-- [ ] Enable Discussions
+- [ ] Enable Discussions if repository is public
 - [ ] Enable Projects
   
 #### Pull Requests Section:
