@@ -6,7 +6,9 @@ def run_gh_query(date_list:list[str], orgs:list[str], use_init_date:bool=False, 
     command_template:str = "gh search repos props.last-ci-review-date:[TEMPLATE_DATE] --archived=false --include-forks=false --owner=[ORG_NAME] --limit 1000 --json owner,name --jq '.[] | \"\\(.owner.login),\\(.name)\"' | cat"
     if use_init_date:
         command_template = "gh search repos props.initial-ci-review-date:[TEMPLATE_DATE] --archived=false --include-forks=false --owner=[ORG_NAME] --limit 1000 --json owner,name --jq '.[] | \"\\(.owner.login),\\(.name)\"' | cat"
-    elif no_dates_on_repo:
+
+    # If no_dates_on_repo is True, we will not use the date in the command
+    if no_dates_on_repo:
         command_template = "gh search repos --archived=false --include-forks=false --owner=[ORG_NAME] --limit 1000 --json owner,name --jq '.[] | \"\\(.owner.login),\\(.name)\"' | cat"
 
     with open("audit_setup.sh","w") as shell:
@@ -82,19 +84,20 @@ def parse_args() -> tuple[str,str,int,list[str],bool]:
     Parse the command line arguments passed to the script
 
     Returns:
-        tuple[str,str,int,list[str],bool]:
+        tuple[str,str,int,list[str],bool,bool]:
             start (str): The start date for the audit
             end (str): The end date for the audit
             quarter (int): The quarter to start the audit for
             org_names (list[str]): The list of GitHub organization names
             use_init (bool): Specify whether or not to use initial-ci-review-date custom property
+            no_dates_flag (bool): Specify that no dates have been set on the repo for this audit
     """
     parser = argparse.ArgumentParser(description="The setup-ci-audit script generates a list of repositories that will be audited for this quarter")
     parser.add_argument("-q","--quarter",dest="quarter",type=int,metavar="quarter(1,2,3,4)", help="The quarter to start the audit for")
     parser.add_argument("-s","--start",dest="start",type=str,metavar="START (YYYY-MM-DD)", help="Specify a start date for audit prep within a date range")
     parser.add_argument("-e","--end",dest="end",type=str,metavar="END (YYYY-MM-DD)", help="Specify an end date for audit prep within a date range")
     parser.add_argument("-i","--use-initial-ci-review-date",dest="use_init",action="store_true",help="Specify whether or not to use initial-ci-review-date custom property")
-    parser.add_argument("-n","--no-dates-on-repo-flag",dest="no_dates_flag",action="store_true",help="Specify that no dates have ever been set on the repo")
+    parser.add_argument("-n","--no-dates-on-repo-flag",dest="no_dates_flag",action="store_true",help="Specify that no dates have been set on the repo for this audit")
     parser.add_argument("-o", "--org", type=str, nargs="+", default=["hashgraph"], dest="org_names", help="GitHub organization name (default: hashgraph)")
 
     args:argparse.Namespace = parser.parse_args()
