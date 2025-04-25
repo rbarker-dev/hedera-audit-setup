@@ -74,13 +74,7 @@ If actions have run in the last 6 months then actions shall remain enabled:
 ## App Integrations
 - [ ] Dependabot is configured to monitor all relevant ecosystems (verify through `dependabot.yaml` file)
   - Link to [relevant ecosystems](https://docs.github.com/en/code-security/dependabot/ecosystems-supported-by-dependabot/supported-ecosystems-and-repositories)
-  - npm
-  - electron
-  - github actions
-  - etc.
 - [ ] DCO-2 is configured as the DCO check
-
-## Docker Files
 
 ## Code Formatting
 - [ ] NodeJS Projects use ESLint/Prettier formatting
