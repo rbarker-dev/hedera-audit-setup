@@ -113,6 +113,9 @@ If actions have run in the last 6 months then actions shall remain enabled:
 
 - [ ] The Repository is using the latitude runner group label for the `runs-on` stanza
 
+## Build Process Best Practices
+- [ ] The build system implemented in the repo adheres to best practices. See [best practices](https://github.com/PandasWhoCode/gh-audit-setup/blob/main/best-practices.md) for details.
+
 ## Other
 
 - [ ] *If Applicable*: Alert repository owners of software versions that are no longer supported
